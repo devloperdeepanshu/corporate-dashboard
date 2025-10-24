@@ -1,0 +1,158 @@
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  BarChart,
+  Bar,
+} from "recharts";
+import { hrData } from "../data/dummyData.js";
+
+// Colors for the Pie Chart
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b"];
+
+function HrDashboard() {
+  const kpiAnimations = {
+    initial: { opacity: 0, scale: 0.9 },
+    animate: { opacity: 1, scale: 1 },
+  };
+
+  const chartAnimations = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <div className="space-y-8 p-4 md:p-8 bg-gray-50 min-h-screen">
+      {/* Dashboard Title */}
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-3xl font-bold text-gray-900"
+      >
+        HR Dashboard
+      </motion.h1>
+
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {hrData.kpis.map((kpi, i) => {
+          // Determine color for the change (green for +, red for -)
+          const changeColor = kpi.change.startsWith("+")
+            ? "text-green-600"
+            : "text-red-600";
+            
+          return (
+            <motion.div
+              key={i}
+              initial={kpiAnimations.initial}
+              animate={kpiAnimations.animate}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white shadow-lg p-6 rounded-2xl border border-gray-100"
+            >
+              <h3 className="text-gray-500 text-sm font-medium">
+                {kpi.title}
+              </h3>
+              <p className="text-3xl font-semibold text-gray-900 mt-2">
+                {kpi.value}
+              </p>
+              <span className={`text-sm font-medium ${changeColor} mt-1 block`}>
+                {kpi.change}
+              </span>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Charts Grid (2-column) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        {/* Employees by Department (Vertical Bar Chart) */}
+        <motion.div
+          initial={chartAnimations.initial}
+          animate={chartAnimations.animate}
+          transition={{ delay: 0.4 }}
+          className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Employees by Department
+          </h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={hrData.departmentStats}
+              layout="vertical"
+              margin={{ left: 30 }} // Add margin for department names
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis type="number" stroke="#6b7280" />
+              <YAxis
+                dataKey="department"
+                type="category"
+                width={80}
+                stroke="#6b7280"
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "white",
+                  borderRadius: "12px",
+                  borderColor: "#e5e7eb",
+                }}
+              />
+              <Bar dataKey="employees" fill="#3b82f6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </motion.div>
+
+        {/* Gender Split (Pie Chart) */}
+        <motion.div
+          initial={chartAnimations.initial}
+          animate={chartAnimations.animate}
+          transition={{ delay: 0.5 }}
+          className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Gender Split
+          </h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={hrData.genderSplit}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={110}
+                fill="#8884d8"
+                dataKey="value"
+                nameKey="gender"
+                label={(props) => `${props.gender} (${props.percent.toFixed(0)}%)`}
+              >
+                {hrData.genderSplit.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "white",
+                  borderRadius: "12px",
+                  borderColor: "#e5e7eb",
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+export default HrDashboard;
