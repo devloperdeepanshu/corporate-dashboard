@@ -12,8 +12,6 @@ import {
   Pie,
   Cell,
   Legend,
-  BarChart,
-  Bar,
 } from "recharts";
 import { salesData } from "../data/dummyData.js";
 
@@ -56,12 +54,8 @@ function SalesDashboard() {
               transition={{ delay: i * 0.1 }}
               className="bg-white shadow-lg p-6 rounded-2xl border border-gray-100"
             >
-              <h3 className="text-gray-500 text-sm font-medium">
-                {kpi.title}
-              </h3>
-              <p className="text-3xl font-semibold text-gray-900 mt-2">
-                {kpi.value}
-              </p>
+              <h3 className="text-gray-500 text-sm font-medium">{kpi.title}</h3>
+              <p className="text-3xl font-semibold text-gray-900 mt-2">{kpi.value}</p>
               <span className={`text-sm font-medium ${changeColor} mt-1 block`}>
                 {kpi.change}
               </span>
@@ -79,9 +73,7 @@ function SalesDashboard() {
           transition={{ delay: 0.4 }}
           className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Revenue Trend
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={salesData.revenueTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
@@ -113,9 +105,7 @@ function SalesDashboard() {
           transition={{ delay: 0.5 }}
           className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Deals by Region
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Deals by Region</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -127,13 +117,13 @@ function SalesDashboard() {
                 fill="#8884d8"
                 dataKey="deals"
                 nameKey="region"
-                label={(props) => `${props.percent.toFixed(0)}%`}
+                label={(props) => {
+                  const percent = Math.round(props.percent * 100);
+                  return percent === 0 ? "<1%" : `${percent}%`;
+                }}
               >
                 {salesData.dealsByRegion.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip

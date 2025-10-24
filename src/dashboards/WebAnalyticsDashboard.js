@@ -120,23 +120,23 @@ function WebAnalyticsDashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
-                data={marketingData.conversionBySource}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={110}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="source"
-                label={(props) => `${props.percent.toFixed(0)}%`}
-              >
-                {marketingData.conversionBySource.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
+  data={marketingData.conversionBySource}
+  cx="50%"
+  cy="50%"
+  labelLine={false}
+  outerRadius={110}
+  fill="#8884d8"
+  dataKey="value"
+  nameKey="source"
+  label={(props) => {
+    const percent = Math.round(props.percent * 100);
+    return percent === 0 ? "<1%" : `${percent}%`;
+  }}
+>
+  {marketingData.conversionBySource.map((entry, index) => (
+    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+  ))}
+</Pie>
               <Tooltip
                 contentStyle={{
                   backgroundColor: "white",

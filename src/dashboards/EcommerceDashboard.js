@@ -136,8 +136,10 @@ function EcommerceDashboard() {
                 fill="#8884d8"
                 dataKey="value"
                 nameKey="category"
-                label={(props) => `${props.category} (${props.percent.toFixed(0)}%)`}
-              >
+label={(props) => {
+  const percent = Math.round(props.percent * 100);
+  return percent === 0 ? `<1%` : `${props.category} (${percent}%)`;
+}}              >
                 {ecommerceData.productCategory.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}

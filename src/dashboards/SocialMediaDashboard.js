@@ -132,7 +132,10 @@ function SocialMediaDashboard() {
                 fill="#8884d8"
                 dataKey="value"
                 nameKey="source"
-                label={(props) => `${props.percent.toFixed(0)}%`}
+                label={(props) => {
+  const percent = Math.round(props.percent * 100);
+  return percent === 0 ? "<1%" : `${percent}%`;
+}}
               >
                 {socialConversionData.map((entry, index) => (
                   <Cell

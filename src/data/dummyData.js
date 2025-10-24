@@ -21,7 +21,7 @@ export const salesData = {
   dealsByRegion: [
     { region: "North", deals: 180 },
     { region: "South", deals: 130 },
-    { region: "East", deals: 90 },
+    { region: "East", deals: 90},
     { region: "West", deals: 140 },
   ],
   conversionSplit: [

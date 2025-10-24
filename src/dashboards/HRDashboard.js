@@ -121,17 +121,20 @@ function HrDashboard() {
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie
-                data={hrData.genderSplit}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={110}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="gender"
-                label={(props) => `${props.gender} (${props.percent.toFixed(0)}%)`}
-              >
+         <Pie
+  data={hrData.genderSplit}
+  cx="50%"
+  cy="50%"
+  labelLine={false}
+  outerRadius={110}
+  fill="#8884d8"
+  dataKey="value"
+  nameKey="gender"
+  label={(props) => {
+    const percent = Math.round(props.percent * 100);
+    return `${props.gender} (${percent === 0 ? "<1" : percent}%)`;
+  }}
+>
                 {hrData.genderSplit.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
